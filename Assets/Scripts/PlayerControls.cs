@@ -95,16 +95,20 @@ public class PlayerControls : MonoBehaviour
 
     // Update is called once per frame
     //void Update()
-   // {
-       // roll += Input.GetAxis("Mouse X") * sensitivity;
-        //pitch -= Input.GetAxis("Mouse Y") * -sensitivity;
-        //if (Input.GetKey(KeyCode.K))
-        //{
-       //     Upgrades.totalmoney = Upgrades.totalmoney + money;
-       //     UnityEngine.SceneManagement.SceneManager.LoadScene(1);
-       // }
+    // {
+    // roll += Input.GetAxis("Mouse X") * sensitivity;
+    //pitch -= Input.GetAxis("Mouse Y") * -sensitivity;
+    //if (Input.GetKey(KeyCode.K))
+    //{
+    //     Upgrades.totalmoney = Upgrades.totalmoney + money;
+    //     UnityEngine.SceneManagement.SceneManager.LoadScene(1);
+    // }
 
-   // }
+    // }
+    private void Update()
+    {
+        HandleInputs();
+    }
     private void FixedUpdate()
     {
 
