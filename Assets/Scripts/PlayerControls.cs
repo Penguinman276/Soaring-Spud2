@@ -1,6 +1,7 @@
 using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Numerics;
 using Unity.VisualScripting;
 using UnityEditor;
@@ -11,7 +12,7 @@ using UnityEngine.UIElements;
 
 public class PlayerControls : MonoBehaviour
 {
-   
+    
    /// <summary>
    public Rigidbody rb;
    /// </summary>
@@ -73,6 +74,7 @@ public class PlayerControls : MonoBehaviour
     private void Awake()
     {
        rb = GetComponent<Rigidbody>();
+       
     }
     private void HandleInputs()
     {

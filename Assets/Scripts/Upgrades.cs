@@ -1,12 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Upgrades : MonoBehaviour
 {
-    public PlayerControls playercontrols;
+    
     public static float totalmoney;
     // Start is called before the first frame update
+    private void Awake()
+    {
+
+
+    }
     void Start()
     {
         
@@ -22,4 +29,13 @@ public class Upgrades : MonoBehaviour
     {
 
     }
+
+    public void playbutton()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+    }
+    
+
+
+
 }
