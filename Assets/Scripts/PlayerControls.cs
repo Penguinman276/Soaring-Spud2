@@ -11,43 +11,49 @@ using UnityEngine.UIElements;
 
 public class PlayerControls : MonoBehaviour
 {
-    //UnityEngine.Quaternion currentRotation;
-    public Rigidbody rb;
-   // public float liftCoefficent;
-   /// public float liftingArea;
-   /// public float dragCoefficent;
-    //public float crosssectArea;
-  //  public float airDensity;
-   // public float Velo;
-  //  public float altitude;
-   // public float AoA;
-  //  public float dynamicPressure;
+   
    /// <summary>
-   /// public float Weight;
+   public Rigidbody rb;
    /// </summary>
-   // public float Lift;
-  //  public float Drag;
-    //public float m = 1f;
-   // public float ground;
+   // public float liftCoefficent;
+  //  public float liftingArea;
+  //  public float dragCoefficent;
+  // public float crosssectArea;
+   //public float airDensity;
+   public float Velo;
+  /// <summary>
+  // public float altitude;
+  /// </summary>
+  // public float AoA;
+//   public float dynamicPressure;
+//    
+  // public float Weight;
+   //
+   //public float Lift;
+  // public float Drag;
+  //  public float m = 1f;
+   //public float ground;
     //public float thrust;
-    //public float pitchrate;
-   // public float rollrate;
-    //public float stabilizeCoefficent;
-    //public float stabilizes;
-    //public float trueHeading;
-    //public float rudderArea;
-    //public static float money;
-    //public float distance;
-    //public GameObject refpoint;
+   /// <summary>
+   /// public float pitchrate;
+   /// </summary>
+   //public float rollrate;
+   //public float stabilizeCoefficent;
+   // public float stabilizes;
+   // public float trueHeading;
+  /// public float rudderArea;
+  //  public static float money;
+   /// public float distance;
+  //  public GameObject refpoint;
     
     public Transform target;
-    //public float rotStiffness = 10f;
-    //public float damping = 2f;
-    //public float sensitivity = 2f;
-    //public float pitch = 0f;
-    //public float roll = 0f;
-    //public float yaw = 0f;
-   // public float torqueMultiplier = 2f;
+   public float rotStiffness = 10f;
+   public float damping = 2f;
+   public float sensitivity = 2f;
+   public float pitch = 0f;
+   public float roll = 0f;
+   public float yaw = 0f;
+   public float torqueMultiplier = 2f;
 
 
     public Upgrades upgrades;
@@ -56,9 +62,7 @@ public class PlayerControls : MonoBehaviour
     public float maxThrust = 200f;
     public float responsiveness = 10f;
     public float throttle;
-    public float roll;
-    public float pitch;
-    public float yaw;
+    
     private float responseModifier
     {
         get {
@@ -82,15 +86,15 @@ public class PlayerControls : MonoBehaviour
     }
     void Start()
     {
-        //UnityEngine.Cursor.lockState = CursorLockMode.Locked;
-       // ground = 0f;
-       // thrust = 50f;
-       // liftingArea = 1;
-       // crosssectArea = 1;
-       // rudderArea = 0.1f;
-      //  transform.rotation = UnityEngine.Quaternion.identity;
-       // UnityEngine.Quaternion deltaRotation = transform.rotation;
-       // m = 1f;
+       // UnityEngine.Cursor.lockState = CursorLockMode.Locked;
+       //ground = 0f;
+      // thrust = 50f;
+       //liftingArea = 1;
+      /// crosssectArea = 1;
+     //rudderArea = 0.1f;
+     // transform.rotation = UnityEngine.Quaternion.identity;
+      // UnityEngine.Quaternion deltaRotation = transform.rotation;
+       //m = 1f;
     }
 
     // Update is called once per frame
@@ -112,7 +116,7 @@ public class PlayerControls : MonoBehaviour
     private void FixedUpdate()
     {
 
-        rb.AddForce(transform.forward * maxThrust * throttle);
+        rb.AddForce(transform.up * maxThrust * throttle);
         rb.AddTorque(transform.up * yaw * responseModifier);
         rb.AddTorque(transform.right * pitch * responseModifier);
         rb.AddTorque(transform.forward * roll * responseModifier); 
