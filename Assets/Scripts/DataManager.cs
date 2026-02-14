@@ -2,16 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Data : MonoBehaviour
+public class DataManager : MonoBehaviour
 {
-    
-    private void Awake()
-    {
-        GameObject.DontDestroyOnLoad(this);
-        
-    }
+    //implement save/load system
     // Start is called before the first frame update
-
     void Start()
     {
         

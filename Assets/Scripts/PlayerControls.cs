@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlTypes;
 using System.Numerics;
 using Unity.VisualScripting;
 using UnityEditor;
@@ -22,6 +23,8 @@ public class PlayerControls : MonoBehaviour
   // public float crosssectArea;
    //public float airDensity;
    public float Velo;
+    public GameObject upgrade; 
+    
   /// <summary>
   // public float altitude;
   /// </summary>
@@ -44,9 +47,9 @@ public class PlayerControls : MonoBehaviour
    // public float trueHeading;
   /// public float rudderArea;
   //  public static float money;
-   /// public float distance;
-  //  public GameObject refpoint;
-    
+   public float distance;
+    //  public GameObject refpoint;
+    public float money;
     public Transform target;
    public float rotStiffness = 10f;
    public float damping = 2f;
@@ -55,8 +58,8 @@ public class PlayerControls : MonoBehaviour
    public float roll = 0f;
    public float yaw = 0f;
    public float torqueMultiplier = 2f;
-
-
+    public float totalmoney;
+   
     public Upgrades upgrades;
 
     public float throttleIncrement = 0.1f;
@@ -167,12 +170,12 @@ public class PlayerControls : MonoBehaviour
 
 
         //  distance = UnityEngine.Vector3.Distance(transform.position, refpoint.transform.position);
-        //  money = distance * 0.5f;
+        money = distance * 0.5f;
     }
     public void EndGame()
     {
         
-        
+        UnityEngine.SceneManagement.SceneManager.LoadScene(1);
         
 
     }
