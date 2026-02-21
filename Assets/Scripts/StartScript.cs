@@ -18,6 +18,6 @@ public class StartScript : MonoBehaviour
     }
     public void PressStart()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene(1);
+        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
     }
 }
