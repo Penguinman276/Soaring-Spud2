@@ -22,7 +22,7 @@ public class TerrainGenerator : MonoBehaviour
             }
         }
     }
-
+    //video link https://www.youtube.com/watch?v=esV1-2hB17E&list=PLEvnA6UOOVbkOTaFPe4P0RA3W1mINbWCf
     // Update is called once per frame
     void Update()
     {
