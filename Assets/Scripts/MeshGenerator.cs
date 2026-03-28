@@ -39,7 +39,7 @@ public class MeshGenerator : MonoBehaviour
                 float xCoord = (x + chunkCoord.x * xSize) * 0.1f;
                 float zCoord = (z + chunkCoord.y * zSize) * 0.1f;
 
-                float y = Mathf.PerlinNoise(x * 0.2f, z * 0.2f) * 4f;
+                float y = Mathf.PerlinNoise(x * 0.1f, z * 0.1f) * 3f;
                 vertices[i] = new Vector3(x * meshScale, y * meshScale, z * meshScale);
                 i++;
             }

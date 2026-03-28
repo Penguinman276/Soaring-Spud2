@@ -19,6 +19,9 @@ public class TerrainManager : MonoBehaviour
 
     void UpdateChunks()
     {
+        Vector2 forward = new Vector2(player.forward.x, player.forward.z).normalized;
+        float forwardBias = 2f; // tweak this
+        Vector2 biasOffset = forward * forwardBias;
         Vector2 playerChunkCoord = new Vector2(
             Mathf.FloorToInt(player.position.x / chunkSize),
             Mathf.FloorToInt(player.position.z / chunkSize)
@@ -29,8 +32,8 @@ public class TerrainManager : MonoBehaviour
             for (int x = -viewDistance; x <= viewDistance; x++)
             {
                 Vector2 coord = new Vector2(
-                    playerChunkCoord.x + x,
-                    playerChunkCoord.y + z
+                playerChunkCoord.x + x + Mathf.RoundToInt(biasOffset.x),
+                playerChunkCoord.y + z + Mathf.RoundToInt(biasOffset.y)
                 );
 
                 if (!chunks.ContainsKey(coord))
@@ -39,15 +42,17 @@ public class TerrainManager : MonoBehaviour
                 }
             }
         }
+        
     }
 
     void SpawnChunk(Vector2 coord)
     {
         Vector3 position = new Vector3(
-    coord.x * chunkSize + chunkSize / 2f,
-    0,
-    coord.y * chunkSize + chunkSize / 2f
-);
+      coord.x * chunkSize,
+       0,
+      coord.y * chunkSize
+     );
+
 
         GameObject chunk = Instantiate(chunkPrefab, position, Quaternion.identity);
 
