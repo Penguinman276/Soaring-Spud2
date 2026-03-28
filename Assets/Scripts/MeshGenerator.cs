@@ -14,6 +14,7 @@ public class MeshGenerator : MonoBehaviour
     public float meshScale = 1f;
     public int xSize = 20;
     public int zSize = 20;
+    public Vector2 chunkCoord;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,7 +25,7 @@ public class MeshGenerator : MonoBehaviour
         UpdateMesh();
 
     }
-    // video link https://www.youtube.com/watch?v=64NblGkAabk
+    // video link https://www.youtube.com/watch?v=WP-Bm65Q-1Y
 
     // Update is called once per frame
     void CreateShape()
@@ -35,6 +36,9 @@ public class MeshGenerator : MonoBehaviour
         {
             for (int x = 0; x <= xSize; x++)
             {
+                float xCoord = (x + chunkCoord.x * xSize) * 0.1f;
+                float zCoord = (z + chunkCoord.y * zSize) * 0.1f;
+
                 float y = Mathf.PerlinNoise(x * 0.2f, z * 0.2f) * 4f;
                 vertices[i] = new Vector3(x * meshScale, y * meshScale, z * meshScale);
                 i++;
