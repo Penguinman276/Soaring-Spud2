@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -20,21 +20,35 @@ public class TerrainManager : MonoBehaviour
     void UpdateChunks()
     {
         Vector2 forward = new Vector2(player.forward.x, player.forward.z).normalized;
-        float forwardBias = 2f; // tweak this
-        Vector2 biasOffset = forward * forwardBias;
+        float forwardBias = 2.5f;
+
         Vector2 playerChunkCoord = new Vector2(
             Mathf.FloorToInt(player.position.x / chunkSize),
             Mathf.FloorToInt(player.position.z / chunkSize)
         );
 
+        HashSet<Vector2> neededChunks = new HashSet<Vector2>();
+
         for (int z = -viewDistance; z <= viewDistance; z++)
         {
             for (int x = -viewDistance; x <= viewDistance; x++)
             {
+                Vector2 offset = new Vector2(x, z);
+
+                // Check if this offset is in front of the player
+                float forwardAmount = Vector2.Dot(offset, forward);
+
+                if (forwardAmount > 0)
+                {
+                    offset += forward * forwardBias;
+                }
+
                 Vector2 coord = new Vector2(
-                playerChunkCoord.x + x + Mathf.RoundToInt(biasOffset.x),
-                playerChunkCoord.y + z + Mathf.RoundToInt(biasOffset.y)
-                );
+                 playerChunkCoord.x + x,
+                 playerChunkCoord.y + z
+                 );
+
+                neededChunks.Add(coord);
 
                 if (!chunks.ContainsKey(coord))
                 {
@@ -42,7 +56,23 @@ public class TerrainManager : MonoBehaviour
                 }
             }
         }
-        
+
+
+        List<Vector2> chunksToRemove = new List<Vector2>();
+
+        foreach (var kvp in chunks)
+        {
+            if (!neededChunks.Contains(kvp.Key))
+            {
+                Destroy(kvp.Value);
+                chunksToRemove.Add(kvp.Key);
+            }
+        }
+
+        foreach (var coord in chunksToRemove)
+        {
+            chunks.Remove(coord);
+        }
     }
 
     void SpawnChunk(Vector2 coord)
@@ -56,8 +86,8 @@ public class TerrainManager : MonoBehaviour
 
         GameObject chunk = Instantiate(chunkPrefab, position, Quaternion.identity);
 
-        MeshGenerator generator = chunk.GetComponent<MeshGenerator>();
-        generator.chunkCoord = coord;
+        BoxCollider generator = chunk.GetComponent<BoxCollider>();
+        
 
         chunks.Add(coord, chunk);
     }

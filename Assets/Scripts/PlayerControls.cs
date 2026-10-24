@@ -3,180 +3,243 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlTypes;
-using System.Numerics;
+
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.SocialPlatforms;
+
 using UnityEngine.UIElements;
+using UnityEngine.UI;
+using UnityEditor.Playables;
+using UnityEngine.Analytics;
+
 
 public class PlayerControls : MonoBehaviour
 {
     
-   /// <summary>
-   public Rigidbody rb;
-   /// </summary>
-   // public float liftCoefficent;
-  //  public float liftingArea;
-  //  public float dragCoefficent;
-  // public float crosssectArea;
-   //public float airDensity;
-   public float Velo;
-    public GameObject upgrade; 
+    public Rigidbody rb;
+
     
-  /// <summary>
-  // public float altitude;
-  /// </summary>
-  // public float AoA;
-//   public float dynamicPressure;
-//    
-  // public float Weight;
-   //
-   //public float Lift;
-  // public float Drag;
-  //  public float m = 1f;
-   //public float ground;
-    //public float thrust;
-   /// <summary>
-   /// public float pitchrate;
-   /// </summary>
-   //public float rollrate;
-   //public float stabilizeCoefficent;
-   // public float stabilizes;
-   // public float trueHeading;
-  /// public float rudderArea;
-  //  public static float money;
-   public float distance;
-    //  public GameObject refpoint;
+    public float Velo;
+    public GameObject upgrade;
+
+    
+    public float distance;
+    public GameObject refpoint;
     public float money;
     public Transform target;
-   public float rotStiffness = 10f;
-   public float damping = 2f;
-   public float sensitivity = 2f;
-   public float pitch = 0f;
-   public float roll = 0f;
-   public float yaw = 0f;
-   public float torqueMultiplier = 2f;
-    public float totalmoney;
-   
-    public Upgrades upgrades;
+  
+    public int totalmoney;
+    public UpgradeManager upgmanager;
+    public distancetracker distancetrk;
+    public float earnedmoney;
+    public GameObject continuebutton;
+    public Vector3 startpos;
+    Quaternion orignialrotation;
 
-    public float throttleIncrement = 0.1f;
-    public float maxThrust = 200f;
-    public float responsiveness = 10f;
-    public float throttle;
+   
+    public float throttleIncrement = 0.01f;
+  
+    private float throttle;
+    public float maxfuel = 100;
+      public float fuel = 100;
+    public disable disable;
+    public Text speeddis;
+    public string speeddisplay;
+
+    public float Flyspeed;
+    public float maxspeed;
+    public float YawAmount = 120;
+    private float Yaw;
+    private float pitch;
+    private float roll;
+    public float upgdrag;
+
+    public string fueldisplay;
+    public Text fueltxt;
+
     
-    private float responseModifier
-    {
-        get {
-            return (rb.mass / 10f) * responsiveness;
-        }
-    }
-    // Start is called before the first frame update
+
+    public bool gamestart;
+
     private void Awake()
     {
-       rb = GetComponent<Rigidbody>();
-       
+        rb = GetComponent<Rigidbody>();
+
     }
     private void HandleInputs()
     {
-        roll = Input.GetAxis("Roll");
-        pitch = Input.GetAxis("Pitch");
-        yaw = Input.GetAxis("Yaw");
+        
+        if (Input.GetKey(KeyCode.Space))
+        {
+            throttle += throttleIncrement;
+        }
+        if (Input.GetKey(KeyCode.LeftControl))
+        {
+            throttle -= throttleIncrement;
+        }
 
-        if (Input.GetKey(KeyCode.Space)) throttle += throttleIncrement;
-        else if (Input.GetKey(KeyCode.LeftControl)) throttle -= throttleIncrement;
-        throttle = Mathf.Clamp(throttle, 0f, 100f);
+        throttle = Mathf.Clamp(throttle, 0.0f, 1f);    
+         
+
     }
+
+
     void Start()
     {
-       // UnityEngine.Cursor.lockState = CursorLockMode.Locked;
-       //ground = 0f;
-      // thrust = 50f;
-       //liftingArea = 1;
-      /// crosssectArea = 1;
-     //rudderArea = 0.1f;
-     // transform.rotation = UnityEngine.Quaternion.identity;
-      // UnityEngine.Quaternion deltaRotation = transform.rotation;
-       //m = 1f;
+        continuebutton.SetActive(false);
+        startpos = transform.position;
+        Quaternion orignialrotation = transform.rotation;
+        startpos = transform.position;
+        gamestart = true;
+        upgdrag = 3;
+        
+        
     }
 
-    // Update is called once per frame
-    //void Update()
-    // {
-    // roll += Input.GetAxis("Mouse X") * sensitivity;
-    //pitch -= Input.GetAxis("Mouse Y") * -sensitivity;
-    //if (Input.GetKey(KeyCode.K))
-    //{
-    //     Upgrades.totalmoney = Upgrades.totalmoney + money;
-    //     UnityEngine.SceneManagement.SceneManager.LoadScene(1);
-    // }
-
-    // }
+    
     private void Update()
     {
         HandleInputs();
+        fueldisplay = "Fuel: " + fuel;
+        fueltxt.text = fueldisplay;
+        
     }
+
+
+    
+
+   
+    
+
     private void FixedUpdate()
     {
+        HandleInputs();
+       // Flyspeed = 50 * throttle;
+        //Flyspeed = Mathf.Clamp(Flyspeed, 0.0f, 50.0f);
+        //earnedmoney = distancetrk.totalDistanceTraveled * 0.8f;
+        
+        transform.position += transform.forward * Flyspeed * Time.deltaTime;
 
-        rb.AddForce(transform.up * maxThrust * throttle);
-        rb.AddTorque(transform.up * yaw * responseModifier);
-        rb.AddTorque(transform.right * pitch * responseModifier);
-        rb.AddTorque(transform.forward * roll * responseModifier); 
-        // float vertical = Input.GetAxis("Vertical");
-        //float horizontal = Input.GetAxis("Horizontal");
-
-        //UnityEngine.Quaternion rollRotation = new UnityEngine.Quaternion(0f, roll * 0.0174f, 0f, 0.2f);
-        //UnityEngine.Quaternion pitchRotation = new UnityEngine.Quaternion(0f, 0f, pitch * 0.0174f, 0.2f);
-        //UnityEngine.Quaternion yawRotation = new UnityEngine.Quaternion(yaw * 0.0174f, 0f, 0f, 0.2f);
-
-
-
-
-        //var localVelocity = transform.InverseTransformDirection(rb.velocity);
-
-        // Lift = liftCoefficent * dynamicPressure * liftingArea;
-        // Drag = dragCoefficent * dynamicPressure * crosssectArea;
-        // stabilizes = stabilizeCoefficent * dynamicPressure * rudderArea;
-        /// Weight = m * -9.81f;
-        /// dynamicPressure = 0.5f * airDensity * Velo * 2;
-        // airDensity = 1.224f - (0.000109f * altitude);
-        // liftCoefficent = (2 * 3.14f) * AoA;
-        // stabilizeCoefficent = (2 * 3.14f) * Input.compass.trueHeading;
-
-        //https://www.youtube.com/watch?v=fThb5M2OBJ8 WATCH THIS!!!
+        
+        
+            float horizontalInput = Input.GetAxis("Yaw");
+            float verticalInput = Input.GetAxis("Pitch");
+        
+        
 
 
-        //Velo = rb.velocity.magnitude;
-        // altitude = ground + transform.position.y;
-        //if (Input.GetKey(KeyCode.Space))
-        //{
-        //    rb.AddRelativeForce(UnityEngine.Vector3.right * thrust);
-        // }
+        if (gamestart == true)
+        {
+            float pitch = verticalInput * 60f * Time.deltaTime;
+            float roll = -horizontalInput * 90f * Time.deltaTime;
 
-        //UnityEngine.Quaternion targetrotation = transform.rotation = pitchRotation * rollRotation * yawRotation;
-        //UnityEngine.Quaternion deltaRotation = targetrotation * UnityEngine.Quaternion.Inverse(rb.rotation);
+            transform.Rotate(pitch, 0f, roll, Space.Self);
+            fuel = fuel - (throttle * 100 * 0.001f);
+            fuel = Mathf.Clamp(fuel, 0, maxfuel);
+            if (fuel <= 0)
+            {
+                rb.AddForce(Vector3.down * 75, ForceMode.Acceleration);
+                throttle = 0;
+                rb.drag = 1;
+            } else
+            Flyspeed = maxspeed * throttle;
+            Flyspeed = Mathf.Clamp(Flyspeed, 0.0f, maxspeed);
+            earnedmoney = distancetrk.totalDistanceTraveled * 10f;
+            upgmanager.upgmenu = false;
+            
 
-        // deltaRotation.ToAngleAxis(out float angle, out UnityEngine.Vector3 axis);
+        }
+        else
+        {
+            Flyspeed = 0;
+            Yaw = 0;
+            pitch = 0;
+            roll = 0;
+            throttle = 0;
+            fuel = 0;
+            upgmanager.OpenUpgMenu.gameObject.SetActive(true);
+            upgmanager.CloseUpgMenu.gameObject.SetActive(true);
 
+        }
+        
+        
 
-        // UnityEngine.Vector3 torqueInput = axis * angle * torqueMultiplier;
-        // pitchrate = 1f;
-        // rollrate = 1f;
-
-        //rb.AddRelativeTorque(torqueInput, ForceMode.Force);
-
-
-        //  distance = UnityEngine.Vector3.Distance(transform.position, refpoint.transform.position);
-        money = distance * 0.5f;
+       
+        
     }
-    public void EndGame()
+
+
+
+
+
+
+
+    
+
+
+
+
+
+    //https://www.youtube.com/watch?v=7vAHo2B1zLc WATCH THIS!!!
+
+
+
+
+
+
+    public void EndGame() {
+        gamestart = false;
+    continuebutton.SetActive(true);
+    money = money + earnedmoney;
+    distancetrk.totalDistanceTraveled = 0;
+        transform.position = startpos;
+        transform.rotation = orignialrotation;
+    rb.velocity = UnityEngine.Vector3.zero;
+    rb.angularVelocity = UnityEngine.Vector3.zero;
+    
+        rb.constraints = RigidbodyConstraints.FreezeAll;
+    throttle = 0f;
+        
+        rb.constraints = RigidbodyConstraints.FreezeAll;
+        transform.position = startpos;
+        Flyspeed = 0;
+        
+    
+    }
+      
+
+    
+   
+    
+    private void OnCollisionEnter(Collision other)
     {
+        if (other.gameObject.CompareTag("terrain"))
+        {
+            EndGame();
+            
+        }
+
         
-        UnityEngine.SceneManagement.SceneManager.LoadScene(1);
+    }
+    public void ContinueGame()
+    {
+        gamestart = true;
+        rb.drag = upgdrag;
+        rb.constraints = RigidbodyConstraints.None;
+        fuel = maxfuel;
         
+       
+       // upgmanager.Speedupg.interactable = false;
+      //  upgmanager.Agilityupg.interactable = false;
+      //  upgmanager.Fuelrefill.interactable = false;
+        distancetrk.totalDistanceTraveled = 0;
+        upgmanager.earnedmoneydisplay = string.Empty;
+        earnedmoney = 0;
+        Time.timeScale = 1f;
+        rb.drag = upgmanager.playerrb.drag;
+        continuebutton.SetActive(false);
 
     }
 }

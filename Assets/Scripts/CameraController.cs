@@ -9,7 +9,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] float speed;
 
     private int index = 1;
-    private Vector3 target;
+    public Vector3 target;
 
     private void Update()
     {
@@ -18,11 +18,13 @@ public class CameraController : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.Alpha3)) index = 2;
         else if (Input.GetKeyDown(KeyCode.Alpha4)) index = 3;
 
-        target = pov[index].position;
+       
     }
 
     private void FixedUpdate()
     {
+        target = pov[index].position;
+
         transform.position = Vector3.MoveTowards(transform.position, target,Time.deltaTime * speed);
         transform.forward = pov[index].forward;
     }
