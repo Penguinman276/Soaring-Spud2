@@ -6,6 +6,7 @@ TagManager:
   tags:
   - upgrade
   - terrain
+  - Enemy
   layers:
   - Default
   - TransparentFX

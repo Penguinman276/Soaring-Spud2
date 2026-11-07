@@ -44,14 +44,7 @@ public class MachineGun : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetMouseButtonDown(0) && Time.time >= hangtime)
-        {
-            Squeeze();
-            hangtime = Time.time + firerate;
-        }
-    }
+   
 
     void Squeeze()
     {
@@ -68,7 +61,33 @@ public class MachineGun : MonoBehaviour
                 Debug.Log("Hit enemy");
             }
         }
-       
+        Debug.DrawRay(transform.position,
+    transform.forward * 20f, Color.blue);
+
+        Debug.DrawRay(transform.position,
+            transform.up * 20f, Color.green);
+
     }
-    
+    void Update()
+    {
+        if (Input.GetMouseButton(0))
+        {
+            Fire();
+        }
+    }
+
+    public void AIFire()
+    {
+        Fire();
+    }
+
+    void Fire()
+    {
+        if (Time.time >= hangtime)
+        {
+            Squeeze();
+            hangtime = Time.time + firerate;
+        }
+    }
+
 }

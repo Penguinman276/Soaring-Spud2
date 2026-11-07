@@ -276,7 +276,7 @@ public class UpgradeManager : MonoBehaviour
     {
         if (player.money >= 1000)
         {
-            player.maxfuel = player.maxfuel + 75;
+            player.maxfuel = player.maxfuel + 1000;
             player.money = player.money - 1000;
             Fuelupg2.interactable = false;
             fuel2purchased = true;
